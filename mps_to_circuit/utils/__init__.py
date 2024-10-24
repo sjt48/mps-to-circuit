@@ -8,12 +8,19 @@
 # copyright notice, and modified files need to carry a notice indicating
 # that they have been altered from the originals.
 
-"""MPS to circuit package."""
 
-from .mps_to_circuit import (
-    mps_to_circuit,
+from .matrix import (
+    _gram_schmidt,
+    _has_orthonormal_columns,
+    _is_unitary,
+)
+from .tensor import (
+    _pad_tensor,
 )
 
 __all__ = [
-    "mps_to_circuit",
+    "_gram_schmidt",
+    "_has_orthonormal_columns",
+    "_is_unitary",
+    "_pad_tensor",
 ]
