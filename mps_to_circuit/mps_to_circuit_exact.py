@@ -24,6 +24,8 @@ from .utils import (
 
 def _mps_to_circuit_exact(
     mps: list[np.ndarray],
+    *,
+    shape: str = "lrp",
 ) -> QuantumCircuit:
     """Convert a matrix product state to a quantum circuit.
 
@@ -34,7 +36,7 @@ def _mps_to_circuit_exact(
 
     :return: A quantum circuit consisting of single-qubit isometries that represents the input MPS.
     """
-    _mps = _prepare_mps(mps, "lrp")
+    _mps = _prepare_mps(mps, shape=shape)
     N = _mps._L
     qc = QuantumCircuit(N)
 
