@@ -33,6 +33,8 @@ def _mps_to_circuit_exact(
     circuit.
 
     :param mps: A matrix product state (MPS) representation of a quantum state.
+    :param shape: Encodes which index each tensor dimension corresponds to, where `l` is the left
+        virtual index, `r` is the right virtual index and `p` is the physical index.
 
     :return: A quantum circuit consisting of single-qubit isometries that represents the input MPS.
     """
