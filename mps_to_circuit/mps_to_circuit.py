@@ -14,10 +14,15 @@ import numpy as np
 from qiskit import QuantumCircuit
 
 from .mps_to_circuit_exact import _mps_to_circuit_exact
+from .mps_to_circuit_approx import _mps_to_circuit_approx
 
 
 def mps_to_circuit(
-    mps: list[np.ndarray], *, method: str = "exact", shape: str = "lrp"
+    mps: list[np.ndarray],
+    *,
+    method: str = "exact",
+    shape: str = "lrp",
+    **kwargs,
 ) -> QuantumCircuit:
     """Convert a matrix product state to a quantum circuit.
 
@@ -30,6 +35,8 @@ def mps_to_circuit(
     """
     match method:
         case "exact":
-            return _mps_to_circuit_exact(mps, shape=shape)
+            return _mps_to_circuit_exact(mps, shape=shape, **kwargs)
+        case "approximate":
+            return _mps_to_circuit_approx(mps, shape=shape, **kwargs)
         case _:
             raise ValueError(f"Invalid method `{method}`")

@@ -16,6 +16,7 @@ from .matrix import (
 )
 from .tensor import (
     _pad_tensor,
+    _prepare_mps,
 )
 
 __all__ = [
@@ -23,4 +24,5 @@ __all__ = [
     "_has_orthonormal_columns",
     "_is_unitary",
     "_pad_tensor",
+    "_prepare_mps",
 ]

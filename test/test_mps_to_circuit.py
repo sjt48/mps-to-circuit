@@ -51,9 +51,12 @@ def _mps_to_statevector(mps: MatrixProductState) -> np.ndarray:
     return _convert_to_little_endian(mps.to_dense())
 
 
+# Exact method tests
+
+
 @pytest.mark.parametrize("chi_max", range(1, 17))
-def test_mps_to_circuit(chi_max):
-    """Test MPS to quantum circuit conversion function."""
+def test_mps_to_circuit_exact_method(chi_max):
+    """Test exact MPS to quantum circuit conversion function."""
 
     mps = MPS_rand_state(L=8, bond_dim=chi_max)
     mps.compress()
@@ -67,8 +70,65 @@ def test_mps_to_circuit(chi_max):
 
     arrays = list(mps.arrays)
 
-    qc = mps_to_circuit(arrays)
+    qc = mps_to_circuit(arrays, method="exact")
     result = Statevector(qc)
 
     fidelity = state_fidelity(expected, result)
+    assert np.isclose(fidelity, 1.0)
+
+
+# Approximate method tests
+
+
+@pytest.mark.parametrize("chi_max", range(1, 17))
+def test_mps_to_circuit_approx_method(chi_max):
+    """
+    Test approximate MPS to quantum circuit conversion function.
+    - The circuits should have the correct number of gates
+    - Fidelity should increase as more layers are added
+    """
+
+    mps = MPS_rand_state(L=8, bond_dim=chi_max)
+    mps.compress()
+    mps.normalize()
+
+    assert chi_max <= 2 ** (
+        mps._L // 2
+    ), f"chi_max={chi_max} is too large for L={mps._L}."
+
+    expected = Statevector(_mps_to_statevector(mps))
+
+    arrays = list(mps.arrays)
+
+    for i in range(1, 6):
+        qc = mps_to_circuit(arrays, method="approximate", N=i)
+        # The circuit after i layers should have num_sites * i gates
+        assert len(qc.data) == mps._L * i
+
+        result = Statevector(qc)
+        fidelity = state_fidelity(expected, result)
+        previous_fidelity = 0.0
+        # Fidelity after i layers should be greater than fidelity after i-1 layers
+        if i > 0:
+            assert fidelity > previous_fidelity
+        previous_fidelity = fidelity
+
+
+def test_mps_to_circuit_approx_method_is_exact_for_chi_2():
+    """
+    Test approximate MPS to quantum circuit conversion function.
+    - The single-layer circuit should be exact for MPS of bond dimension 2
+    """
+
+    num_sites = 8
+    mps = MPS_rand_state(L=num_sites, bond_dim=2)
+    mps.normalize()
+
+    expected = Statevector(_mps_to_statevector(mps))
+
+    arrays = list(mps.arrays)
+    qc = mps_to_circuit(arrays, method="approximate", N=1)
+    result = Statevector(qc)
+    fidelity = state_fidelity(expected, result)
+
     assert np.isclose(fidelity, 1.0)

@@ -12,13 +12,13 @@
 
 import numpy as np
 from qiskit import QuantumCircuit
-from quimb.tensor import MatrixProductState
 
 from .utils import (
     _gram_schmidt,
     _has_orthonormal_columns,
     _is_unitary,
     _pad_tensor,
+    _prepare_mps,
 )
 
 
@@ -33,10 +33,12 @@ def _mps_to_circuit_exact(
     circuit.
 
     :param mps: A matrix product state (MPS) representation of a quantum state.
+    :param shape: The ordering of the dimensions of each MPS tensor. 'left', 'right', 'physical' by
+    default.
     :param shape: Encodes which index each tensor dimension corresponds to, where `l` is the left
         virtual index, `r` is the right virtual index and `p` is the physical index.
 
-    :return: A quantum circuit consisting of single-qubit isometries that represents the input MPS.
+    :return: A quantum circuit consisting of multi-qubit isometries that represents the input MPS.
     """
     _mps = _prepare_mps(mps, shape=shape)
     N = _mps._L
@@ -86,33 +88,3 @@ def _mps_to_circuit_exact(
         qc.unitary(unitary, qubits)
 
     return qc
-
-
-def _prepare_mps(
-    mps_arrays: list[np.ndarray], shape: str = "lrp"
-) -> MatrixProductState:
-    """
-    Builds a Quimb MatrixProductState in left-canonical form from a list of individual tensors
-
-    Args:
-        mps_arrays: The individual tensors from which to build the MPS.
-
-        shape: The ordering of the dimensions of each array. 'left', 'right', 'physical' by default.
-
-    Returns:
-        A Quimb MatrixProductState in left-canonical form.
-    """
-    # Some libraries return the left (right) tensor with left (right) virtual dimension 1. Quimb
-    # prefers for these dimensions to be absent.
-    l_dim = shape.find("l")
-    r_dim = shape.find("r")
-    if len(mps_arrays[0].shape) == 3:
-        mps_arrays[0] = np.squeeze(mps_arrays[0], axis=l_dim)
-    if len(mps_arrays[-1].shape) == 3:
-        mps_arrays[-1] = np.squeeze(mps_arrays[-1], axis=r_dim)
-
-    # Build Quimb MPS and put it in left-canonical form
-    mps = MatrixProductState(mps_arrays, shape=shape)
-    mps.left_canonize()
-
-    return mps
