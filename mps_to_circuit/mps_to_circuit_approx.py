@@ -12,7 +12,6 @@
 
 import numpy as np
 from qiskit import QuantumCircuit
-from typing import List
 
 from .mps_to_circuit_exact import _mps_to_circuit_exact
 
@@ -20,7 +19,7 @@ from .utils import _prepare_mps
 
 
 def _mps_to_circuit_approx(
-    mps: List[np.ndarray],
+    mps: list[np.ndarray],
     shape: str = "lrp",
     N: int = 1,
     compress: bool = True,
