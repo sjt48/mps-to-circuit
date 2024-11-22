@@ -100,16 +100,16 @@ def test_mps_to_circuit_approx_method(chi_max):
 
     arrays = list(mps.arrays)
 
-    for i in range(1, 6):
-        qc = mps_to_circuit(arrays, method="approximate", N=i)
-        # The circuit after i layers should have num_sites * i gates
-        assert len(qc.data) == mps._L * i
+    for num_layers in range(1, 6):
+        qc = mps_to_circuit(arrays, method="approximate", num_layers=num_layers)
+        # The circuit after num_layers layers should have num_sites * num_layers gates
+        assert len(qc.data) == mps._L * num_layers
 
         result = Statevector(qc)
         fidelity = state_fidelity(expected, result)
         previous_fidelity = 0.0
-        # Fidelity after i layers should be greater than fidelity after i-1 layers
-        if i > 0:
+        # Fidelity after num_layers layers should be greater than fidelity after num_layers-1 layers
+        if num_layers > 0:
             assert fidelity > previous_fidelity
         previous_fidelity = fidelity
 
@@ -127,7 +127,7 @@ def test_mps_to_circuit_approx_method_is_exact_for_chi_2():
     expected = Statevector(_mps_to_statevector(mps))
 
     arrays = list(mps.arrays)
-    qc = mps_to_circuit(arrays, method="approximate", N=1)
+    qc = mps_to_circuit(arrays, method="approximate", num_layers=1)
     result = Statevector(qc)
     fidelity = state_fidelity(expected, result)
 
