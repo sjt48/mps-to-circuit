@@ -21,7 +21,7 @@ from .utils import _prepare_mps
 def _mps_to_circuit_approx(
     mps: list[np.ndarray],
     shape: str = "lrp",
-    N: int = 1,
+    num_layers: int = 1,
     compress: bool = True,
     chi_max: int = -1,
 ) -> QuantumCircuit:
@@ -34,7 +34,7 @@ def _mps_to_circuit_approx(
     :param mps: A matrix product state (MPS) representation of a quantum state.
     :param shape: The ordering of the dimensions of each MPS tensor. 'left', 'right', 'physical' by
     default.
-    :param N: The number of layers to add to the circuit.
+    :param num_layers: The number of layers to add to the circuit.
     :param compress: Set to True to compress the MPS after each layer to a maximum bond dimension of
     chi_max.
     :param chi_max: See description for compress.
@@ -59,7 +59,7 @@ def _mps_to_circuit_approx(
     if not compress and chi_max != -1:
         print("Warning: chi_max will be ignored if compress==False")
 
-    for layer in range(N):
+    for layer in range(num_layers):
         # Compress the MPS from the previous layer to a maximum bond dimension of 2
         # |ψ_k> -> |ψ'_k>
         compressed_mps = disentangled_mps.copy(deep=True)
