@@ -91,4 +91,5 @@ def _mps_to_circuit_approx(
             # Compress |ψ_(k+1)> to have maximum bond dimension chi_max
             disentangled_mps.compress(form="left", max_bond=chi_max)
 
-    return circuits[-1]  # TODO: What do we want to return?
+    # Return final circuit.
+    return circuits[-1]  
