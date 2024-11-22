@@ -79,13 +79,13 @@ def _mps_to_circuit_approx(
         # Apply the inverse of U_k to disentangle |ψ_k>
         # |ψ_(k+1)> = inv(U_k) @ |ψ_k>
         for i in range(len(unitaries)):
-            U_inv = unitaries[-(i + 1)].conj().T
-            if U_inv.shape[0] == 4:
+            inverse = unitaries[-(i + 1)].conj().T
+            if inverse.shape[0] == 4:
                 disentangled_mps.gate_split(
-                    U_inv, (i - 1, i), inplace=True, cutoff=1e-3
+                    inverse, (i - 1, i), inplace=True, cutoff=1e-3
                 )
             else:
-                disentangled_mps.gate(U_inv, (i), inplace=True, contract=True)
+                disentangled_mps.gate(inverse, (i), inplace=True, contract=True)
 
         if compress:
             # Compress |ψ_(k+1)> to have maximum bond dimension chi_max
