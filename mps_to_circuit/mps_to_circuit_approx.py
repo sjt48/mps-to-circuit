@@ -74,7 +74,7 @@ def _mps_to_circuit_approx(
         if history is not None:
             history["circuits"].append(circuit)
 
-        unitaries = [gate.to_matrix() for (gate, _, _) in circuit.data]
+        unitaries = [instruction.operation.to_matrix() for instruction in circuit.data]
 
         # inv(U_k) @ ... @ inv(U_1) @ inv(U_0) @ |0>.
         final_circuit = (
