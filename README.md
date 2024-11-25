@@ -4,6 +4,8 @@ Tool to convert a matrix product state to a Qiskit quantum circuit.
 
 ## Development
 
+### Installation
+
 This package and all dependencies can be installed using [uv](https://github.com/astral-sh/uv).
 
 ```sh
