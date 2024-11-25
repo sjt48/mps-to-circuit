@@ -2,7 +2,7 @@
 
 Tool to convert a matrix product state to a Qiskit quantum circuit.
 
-## Installation
+## Development
 
 This package and all dependencies can be installed using [uv](https://github.com/astral-sh/uv).
 
@@ -14,15 +14,7 @@ uv python pin 3.12
 uv pip install -e .
 ```
 
-## Examples
-
-One can run the examples as follows.
-
-```sh
-uv run examples/<example_name>.py
-```
-
-## Testing
+### Testing
 
 One can lint the code using [pytest](https://github.com/pytest-dev/pytest) .
 
@@ -30,7 +22,7 @@ One can lint the code using [pytest](https://github.com/pytest-dev/pytest) .
 uv run pytest
 ```
 
-## Linting
+### Linting
 
 One can lint the code using the [Ruff Linter](https://docs.astral.sh/ruff/linter/).
 
@@ -38,7 +30,7 @@ One can lint the code using the [Ruff Linter](https://docs.astral.sh/ruff/linter
 uv run ruff check
 ```
 
-## Formatting
+### Formatting
 
 One can format the code using the [Ruff Formatter](https://github.com/astral-sh/ruff/formatter/).
 
@@ -46,7 +38,7 @@ One can format the code using the [Ruff Formatter](https://github.com/astral-sh/
 uv run ruff format
 ```
 
-## Sorting imports
+### Sorting imports
 
 In order to both sort imports and format, call the Ruff linter and then the formatter:
 
@@ -55,14 +47,14 @@ uv run ruff check --select I --fix
 uv run ruff format
 ```
 
-## License
-
-[Apache License 2.0](LICENSE.txt)
-
-## Code of conduct
+### Code of conduct
 
 All members of this project agree to adhere to the Qiskit Code of Conduct listed
 [here](https://github.com/Qiskit/qiskit/blob/master/CODE_OF_CONDUCT.md).
+
+## License
+
+[Apache License 2.0](LICENSE.txt)
 
 ## Acknowledgements
 
