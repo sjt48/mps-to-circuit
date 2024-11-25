@@ -8,7 +8,7 @@
 # copyright notice, and modified files need to carry a notice indicating
 # that they have been altered from the originals.
 
-"""Exact MPS to circuit mapping function."""
+"""Approximate MPS to circuit mapping function."""
 
 import numpy as np
 from qiskit import QuantumCircuit
