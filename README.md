@@ -56,7 +56,7 @@ All members of this project agree to adhere to the Qiskit Code of Conduct listed
 
 ## License
 
-[Apache License 2.0](LICENSE.txt)
+[Apache-2.0 license](LICENSE.txt)
 
 ## Acknowledgements
 
