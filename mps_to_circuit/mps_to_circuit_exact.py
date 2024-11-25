@@ -30,7 +30,7 @@ def _mps_to_circuit_exact(
     """Convert a matrix product state to a quantum circuit.
 
     Convert a generic matrix product state (MPS) with arbitrary bond dimensions to a Qiskit quantum
-    circuit.
+    circuit. See Appendix A of S-H Lin, PRX Quantum 2, 010342 (2021).
 
     :param mps: A matrix product state (MPS) representation of a quantum state.
     :param shape: The ordering of the dimensions of each MPS tensor. 'left', 'right', 'physical' by
