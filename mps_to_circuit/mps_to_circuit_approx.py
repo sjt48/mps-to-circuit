@@ -20,10 +20,12 @@ from .utils import _prepare_mps
 
 def _mps_to_circuit_approx(
     mps: list[np.ndarray],
+    *,
     shape: str = "lrp",
     num_layers: int = 1,
     compress: bool = True,
-    chi_max: int = -1,
+    chi_max: int | None = None,
+    history: dict | None = None,
 ) -> QuantumCircuit:
     """Convert a matrix product state to a quantum circuit.
 
@@ -33,52 +35,55 @@ def _mps_to_circuit_approx(
 
     :param mps: A matrix product state (MPS) representation of a quantum state.
     :param shape: The ordering of the dimensions of each MPS tensor. 'left', 'right', 'physical' by
-    default.
+        default.
     :param num_layers: The number of layers to add to the circuit.
-    :param compress: Set to True to compress the MPS after each layer to a maximum bond dimension of
-    chi_max.
-    :param chi_max: See description for compress.
-    NOTE: If set to the default value of -1, chi_max will be set to the maximum bond dimension
-    of the input MPS.
-    NOTE: chi_max will be ignored if compress is False.
+    :param compress: Set to `True` to compress the MPS after each layer to a maximum bond dimension
+        of `chi_max`.
+    :param chi_max: See description for compress. `chi_max` will be ignored if compress is `False`.
+    :param history: Dictionary to store intermediate data from algorithm.
 
-    :return: A quantum circuit consisting of N layers of two-qubit isometries that approximately
-    represents the input MPS.
+    :return: A quantum circuit consisting of `num_layers` of two-qubit isometries that approximately
+        represents the input MPS.
     """
-    # Prepare Quimb MPS in the correct form
+    # Prepare Quimb MPS in the correct form.
     _mps = _prepare_mps(mps, shape)
     compressed_mps = _mps.copy(deep=True)
     disentangled_mps = _mps.copy(deep=True)
 
-    circuits = []
+    # Check chi_max.
+    if not compress and chi_max is not None:
+        print("Warning: `chi_max` is ignored when compress is `False`.")
 
-    if compress and chi_max == -1:
+    if compress and chi_max is None:
         chi_max = _mps.max_bond()
-    if compress and chi_max != -1 and (chi_max < 1 or not isinstance(chi_max, int)):
-        raise ValueError("chi_max must be an integer greater than 0")
-    if not compress and chi_max != -1:
-        print("Warning: chi_max will be ignored if compress==False")
 
-    for layer in range(num_layers):
-        # Compress the MPS from the previous layer to a maximum bond dimension of 2
-        # |ψ_k> -> |ψ'_k>
+    assert chi_max > 0, "`chi_max` must be an integer greater than 0."
+
+    final_circuit = None
+
+    layer = 0
+    while layer < num_layers:
+        # Compress the MPS from the previous layer to a maximum bond dimension of 2,
+        # |ψ_k> -> |ψ'_k>.
         compressed_mps = disentangled_mps.copy(deep=True)
         compressed_mps.compress(form="left", max_bond=2)
         compressed_mps.normalize()
 
-        # Find the unitary U_k such that |ψ'_k> = U_k @ |0>
-        qc = _mps_to_circuit_exact(list(compressed_mps.arrays), shape="lrp")
-        unitaries = [gate.to_matrix() for (gate, _, _) in qc.data]
+        # Find the unitary U_k such that |ψ'_k> = U_k @ |0>.
+        circuit = _mps_to_circuit_exact(list(compressed_mps.arrays), shape="lrp")
+        if history is not None:
+            history["circuits"].append(circuit)
 
-        # Append inv(U_k) @ ... @ inv(U_1) @ inv(U_0) @ |0> to circuits
-        if layer == 0:
-            circuits.append(qc)
-        else:
-            circuits.append(qc.compose(circuits[layer - 1]))
+        unitaries = [gate.to_matrix() for (gate, _, _) in circuit.data]
 
-        # Apply the inverse of U_k to disentangle |ψ_k>
-        # |ψ_(k+1)> = inv(U_k) @ |ψ_k>
-        for i in range(len(unitaries)):
+        # inv(U_k) @ ... @ inv(U_1) @ inv(U_0) @ |0>.
+        final_circuit = (
+            circuit.compose(final_circuit) if final_circuit is not None else circuit
+        )
+
+        # Apply the inverse of U_k to disentangle |ψ_k>,
+        # |ψ_(k+1)> = inv(U_k) @ |ψ_k>.
+        for i, _ in enumerate(unitaries):
             inverse = unitaries[-(i + 1)].conj().T
             if inverse.shape[0] == 4:
                 disentangled_mps.gate_split(
@@ -88,8 +93,10 @@ def _mps_to_circuit_approx(
                 disentangled_mps.gate(inverse, (i), inplace=True, contract=True)
 
         if compress:
-            # Compress |ψ_(k+1)> to have maximum bond dimension chi_max
+            # Compress |ψ_(k+1)> to have maximum bond dimension chi_max.
             disentangled_mps.compress(form="left", max_bond=chi_max)
 
+        layer += 1
+
     # Return final circuit.
-    return circuits[-1]  
+    return final_circuit

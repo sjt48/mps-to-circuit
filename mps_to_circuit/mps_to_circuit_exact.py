@@ -34,24 +34,24 @@ def _mps_to_circuit_exact(
 
     :param mps: A matrix product state (MPS) representation of a quantum state.
     :param shape: The ordering of the dimensions of each MPS tensor. 'left', 'right', 'physical' by
-    default.
+        default.
     :param shape: Encodes which index each tensor dimension corresponds to, where `l` is the left
         virtual index, `r` is the right virtual index and `p` is the physical index.
 
     :return: A quantum circuit consisting of multi-qubit isometries that represents the input MPS.
     """
     _mps = _prepare_mps(mps, shape=shape)
-    N = _mps._L
-    qc = QuantumCircuit(N)
+    num_sites = _mps._L
+    circuit = QuantumCircuit(num_sites)
 
     for i, tensor in reversed(list(enumerate(_mps.arrays))):
         # Convert to a dense NumPy array and pad until virtual dimensions are powers of 2.
         # Quimb defines the indices of the MPS tensors as (d_left, d_right, d), but the left and
-        # right end tensors do not have a left and right dimension respectively
+        # right end tensors do not have a left and right dimension, respectively.
         if i == 0:
             d_right, d = tensor.shape
             tensor = tensor.reshape((1, d_right, d))
-        if i == N - 1:
+        if i == num_sites - 1:
             d_left, d = tensor.shape
             tensor = tensor.reshape((d_left, 1, d))
 
@@ -85,6 +85,6 @@ def _mps_to_circuit_exact(
         assert _is_unitary(unitary)
 
         # Apply unitary to the circuit.
-        qc.unitary(unitary, qubits)
+        circuit.unitary(unitary, qubits)
 
-    return qc
+    return circuit
