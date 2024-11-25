@@ -13,8 +13,8 @@
 import numpy as np
 from qiskit import QuantumCircuit
 
-from .mps_to_circuit_exact import _mps_to_circuit_exact
 from .mps_to_circuit_approx import _mps_to_circuit_approx
+from .mps_to_circuit_exact import _mps_to_circuit_exact
 
 
 def mps_to_circuit(

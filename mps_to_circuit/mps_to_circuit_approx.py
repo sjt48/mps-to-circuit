@@ -14,7 +14,6 @@ import numpy as np
 from qiskit import QuantumCircuit
 
 from .mps_to_circuit_exact import _mps_to_circuit_exact
-
 from .utils import _prepare_mps
 
 
