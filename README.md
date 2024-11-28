@@ -18,7 +18,7 @@ uv pip install -e .
 
 ### Testing
 
-One can lint the code using [pytest](https://github.com/pytest-dev/pytest) .
+One can test the code using [pytest](https://github.com/pytest-dev/pytest) .
 
 ```sh
 uv run pytest
