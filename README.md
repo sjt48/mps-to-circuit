@@ -1,6 +1,6 @@
 # MPS to circuit
 
-Toolbox for converting matrix product states to a Qiskit quantum circuits.
+Toolbox for converting matrix product states to Qiskit quantum circuits.
 
 ## Development
 
