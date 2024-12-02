@@ -23,6 +23,7 @@ def _mps_to_circuit_approx(
     shape: str = "lrp",
     num_layers: int = 1,
     compress: bool = True,
+    cutoff: float = 1e-3,
     chi_max: int | None = None,
     history: dict | None = None,
 ) -> QuantumCircuit:
@@ -38,6 +39,7 @@ def _mps_to_circuit_approx(
     :param num_layers: The number of layers to add to the circuit.
     :param compress: Set to `True` to compress the MPS after each layer to a maximum bond dimension
         of `chi_max`.
+    :param cutoff: Cutoff threshold for the compression. Defaults to 0.001.
     :param chi_max: See description for compress. `chi_max` will be ignored if compress is `False`.
     :param history: Dictionary to store intermediate data from algorithm.
 
@@ -87,7 +89,7 @@ def _mps_to_circuit_approx(
             inverse = unitaries[-(i + 1)].conj().T
             if inverse.shape[0] == 4:
                 disentangled_mps.gate_split(
-                    inverse, (i - 1, i), inplace=True, cutoff=1e-3
+                    inverse, (i - 1, i), inplace=True, cutoff=cutoff
                 )
             else:
                 disentangled_mps.gate(inverse, (i), inplace=True, contract=True)
