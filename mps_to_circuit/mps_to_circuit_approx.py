@@ -70,8 +70,6 @@ def _mps_to_circuit_approx(
 
         # Find the unitary U_k such that |ψ'_k> = U_k @ |0>.
         circuit = _mps_to_circuit_exact(list(compressed_mps.arrays), shape="lrp")
-        if history is not None:
-            history["circuits"].append(circuit)
 
         unitaries = [instruction.operation.to_matrix() for instruction in circuit.data]
 
@@ -79,6 +77,9 @@ def _mps_to_circuit_approx(
         final_circuit = (
             circuit.compose(final_circuit) if final_circuit is not None else circuit
         )
+
+        if history is not None:
+            history["circuits"].append(final_circuit)
 
         # Apply the inverse of U_k to disentangle |ψ_k>,
         # |ψ_(k+1)> = inv(U_k) @ |ψ_k>.
