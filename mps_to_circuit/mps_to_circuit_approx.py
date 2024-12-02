@@ -22,7 +22,7 @@ def _mps_to_circuit_approx(
     *,
     shape: str = "lrp",
     num_layers: int = 1,
-    compress: bool = True,
+    compress: bool = False,
     cutoff: float = 1e-3,
     chi_max: int | None = None,
     history: dict | None = None,
