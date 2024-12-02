@@ -53,7 +53,7 @@ def _mps_to_circuit_approx(
     if not compress and chi_max is not None:
         print("Warning: `chi_max` is ignored when compress is `False`.")
 
-    if compress and chi_max is None:
+    if chi_max is None:
         chi_max = _mps.max_bond()
 
     assert chi_max > 0, "`chi_max` must be an integer greater than 0."
