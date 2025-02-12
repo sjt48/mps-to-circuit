@@ -2,6 +2,56 @@
 
 Toolbox for converting matrix product states to Qiskit quantum circuits.
 
+## Usage with Quimb
+
+Assuming you have a [Quimb](https://github.com/jcmgray/quimb) `MatrixProductState` object, you can
+extract the individual tensors as three-dimensional NumPy arrays using the snippet below.
+
+```python
+mps_arrays = mps.arrays
+```
+
+You can now convert the list of tensors to a Qiskit `QuantumCircuit` using the `mps_to_circuit`
+interface function, specifying the shape as $(v_L, v_R, p)$ (this is also the default argument for `shape`).
+
+For example, using the "exact" method [[Shoen2006](https://arxiv.org/abs/quant-ph/0612101)]:
+
+```python
+qc = mps_to_circuit(mps_arrays, method="exact", shape="lrp")
+```
+
+Or using the "approximate" method
+[[Ran2019](https://arxiv.org/abs/1908.07958)]:
+
+```python
+qc = mps_to_circuit(mps_arrays, method="approximate", shape="lrp", num_layers=3)
+```
+
+## Usage with TenPy
+
+Assuming you have a [TenPy](https://github.com/tenpy/tenpy) `MPS` object, you can extract the
+individual tensors as three-dimensional NumPy arrays using the snippet below.
+
+```python
+mps_arrays = [mps.get_B(i).to_ndarray() for i in range(L)]
+```
+
+You can now convert the list of tensors to a Qiskit `QuantumCircuit` using the `mps_to_circuit`
+interface function, specifying the shape as $(v_L, p, v_R)$.
+
+For example, using the "exact" method [[Shoen2006](https://arxiv.org/abs/quant-ph/0612101)]:
+
+```python
+qc = mps_to_circuit(mps_arrays, method="exact", shape="lpr")
+```
+
+Or using the "approximate" method
+[[Ran2019](https://arxiv.org/abs/1908.07958)]:
+
+```python
+qc = mps_to_circuit(mps_arrays, method="approximate", shape="lpr", num_layers=3)
+```
+
 ## Development
 
 ### Installation
