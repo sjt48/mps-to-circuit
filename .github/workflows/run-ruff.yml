@@ -1,0 +1,19 @@
+name: Run Ruff
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  ruff:
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Run Ruff
+        uses: astral-sh/ruff-action@v3.2.1
+        id: ruff
