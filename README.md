@@ -1,5 +1,7 @@
 # MPS to circuit
 
+[![DOI](https://zenodo.org/badge/840381942.svg)](https://doi.org/10.5281/zenodo.14920028)
+
 Toolbox for converting matrix product states to Qiskit quantum circuits.
 
 ## Usage with Quimb
