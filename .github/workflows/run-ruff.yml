@@ -1,4 +1,4 @@
-name: Run Ruff
+name: Run Ruff and PyTest
 
 on:
   push:
@@ -7,8 +7,8 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  uv-example:
-    name: python
+  run-ruff:
+    name: Run Ruff and PyTest
     runs-on: ubuntu-latest
 
     steps:
