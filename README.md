@@ -102,7 +102,7 @@ All members of this project agree to adhere to the Qiskit Code of Conduct listed
 If you use `mps-to-circuit` please cite as per the BibTeX below.
 
 ```bibtex
-@software{declan_millar_2025_14920029,
+@software{mpstocircuit2025,
   author       = {Declan Millar,
                   GeorgePennington,
                   Natasha Siow and
