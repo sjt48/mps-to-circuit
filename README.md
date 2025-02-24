@@ -97,11 +97,30 @@ uv run ruff format
 All members of this project agree to adhere to the Qiskit Code of Conduct listed
 [here](https://github.com/Qiskit/qiskit/blob/master/CODE_OF_CONDUCT.md).
 
-## License
+## Citation
 
-[Apache-2.0 license](LICENSE.txt)
+If you use `mps-to-circuit` please cite as per the BibTeX below.
+
+```bibtex
+@software{declan_millar_2025_14920029,
+  author       = {Declan Millar,
+                  GeorgePennington,
+                  Natasha Siow and
+                  Steven Thomson},
+  title        = {qiskit-community/mps-to-circuit},
+  month        = feb,
+  year         = 2025,
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.14920029},
+  url          = {https://doi.org/10.5281/zenodo.14920029},
+}
+```
 
 ## Acknowledgements
 
 This work was supported by the Hartree National Centre for Digital Innovation, a collaboration
 between the Science and Technology Facilities Council and IBM.
+
+## License
+
+[Apache-2.0 license](LICENSE.txt)
