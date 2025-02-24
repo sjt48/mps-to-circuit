@@ -90,15 +90,6 @@ One can format the code using the [Ruff Formatter](https://github.com/astral-sh/
 uv run ruff format
 ```
 
-### Sorting imports
-
-In order to both sort imports and format, call the Ruff linter and then the formatter:
-
-```sh
-uv run ruff check --select I --fix
-uv run ruff format
-```
-
 ### Code of conduct
 
 All members of this project agree to adhere to the Qiskit Code of Conduct listed
