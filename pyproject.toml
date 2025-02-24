@@ -9,7 +9,12 @@ dependencies = [
 ]
 
 [tool.uv]
-dev-dependencies = ["pytest>=8.3.3", "ruff>=0.7.0", "quimb==1.8.4"]
+dev-dependencies = [
+    "pytest>=8.3.3",
+    "pytest-cov>=6.0.0",
+    "ruff>=0.7.0",
+    "quimb==1.8.4",
+]
 override-dependencies = ["quimb==1.8.4"]
 
 [tool.ruff]
